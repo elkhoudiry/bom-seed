@@ -2,7 +2,7 @@ plugins {
     id 'maven-publish'
 }
 
-group 'cz.orany'
+group 'me.elkhoudiry'
 version getTagOrDefault('1.0.0-SNAPSHOT')
 
 
@@ -11,6 +11,7 @@ publishing {
         maven {
             name = 'GitHub'
             url = uri('https://maven.pkg.github.com/' + System.getenv('GITHUB_REPOSITORY'))
+            println("my token: ${System.getenv('GITHUB_TOKEN')}")
             credentials {
                 username = ''
                 password = System.getenv('GITHUB_TOKEN')
