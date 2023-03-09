@@ -26,5 +26,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: incrementalPublishToMavenRepository
+          cache-read-only: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
