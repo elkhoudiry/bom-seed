@@ -1,3 +1,5 @@
+import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
+
 plugins {
     id 'maven-publish'
 }
@@ -77,4 +79,24 @@ private static String getTagOrDefault(String defaultValue) {
     }
 
     return defaultValue
+}
+
+
+tasks.register('incrementalPublishToMavenRepository', IncrementalPublishToMavenRepository) {
+    inputDir = file('src')
+    publication = project.tasks.getByPath(":publishMavenPublicationToGitHubPackagesRepository").publication
+    repository = project.tasks.getByPath(":publishMavenPublicationToGitHubPackagesRepository").repository
+}
+
+class IncrementalPublishToMavenRepository extends PublishToMavenRepository {
+    @InputDirectory
+    def File inputDir
+
+    @OutputDirectory
+    File generatedFileDir = project.file("${project.buildDir}/libs")
+
+    @TaskAction
+    void perform(IncrementalTaskInputs inputs) {
+        println 'hello this should be executed ones'
+    }
 }
