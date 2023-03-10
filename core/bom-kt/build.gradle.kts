@@ -34,7 +34,7 @@ publishing {
 
                     versions.forEach {
                         val lastVersion =
-                            if (it.value is String && (it.value as String).matches(Regex("/\\d.*/"))) it.value else "\${$it.value}"
+                            if (it.value is String && (it.value as String).matches(Regex("/\\d.*/"))) it.value else "\${${it.value}}"
                         val dependencyNode = dependenciesManagementNode.appendNode("dependency")
                         dependencyNode.appendNode("groupId", groupId)
                         dependencyNode.appendNode("artifactId", it.key as String)
