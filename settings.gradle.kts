@@ -19,13 +19,11 @@ dependencyResolutionManagement {
         maven(url = "https://developer.huawei.com/repo/")
         google()
         mavenCentral()
-        repositories {
-            maven {
-                url = uri("https://maven.pkg.github.com/elkhoudiry/bom-speed")
-                credentials {
-                    username = user
-                    password = token
-                }
+        maven {
+            url = uri("https://maven.pkg.github.com/elkhoudiry/bom-seed")
+            credentials {
+                username = user
+                password = token
             }
         }
     }
