@@ -23,11 +23,16 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             extensions.getByType<PublishingExtension>().apply {
                 repositories {
                     maven {
+                        val repository =
+                            getLocalProperty("github.repository") as String? ?: System.getenv("GITHUB_REPOSITORY")
+                        val user = getLocalProperty("github.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                        val token = getLocalProperty("github.token") as String? ?: System.getenv("GITHUB_TOKEN")
+
                         name = "GitHubPackages"
-                        url = uri("https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY"))
+                        url = uri("https://maven.pkg.github.com/$repository")
                         credentials {
-                            username = System.getenv("GITHUB_ACTOR")
-                            password = System.getenv("GITHUB_TOKEN")
+                            username = user
+                            password = token
                         }
                     }
                 }
@@ -44,15 +49,13 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             ) {
                 inputDir = file("src/main")
                 dependsOn("${project.path}:build")
-                doLast {
-                    val publishTask = project.tasks.getByPath(
-                        "${project.path}:publishMavenPublicationToGitHubPackagesRepository"
-                    ) as PublishToMavenRepository
+                val publishTask = project.tasks.getByPath(
+                    "${project.path}:publishMavenPublicationToGitHubPackagesRepository"
+                ) as PublishToMavenRepository
 
-                    publication = publishTask.publication
-                    repository = publishTask.repository
-                    publication.groupId = rootProject.group as String
-                }
+                publication = publishTask.publication
+                repository = publishTask.repository
+                publication.groupId = rootProject.group as String
             }
         }
     }
