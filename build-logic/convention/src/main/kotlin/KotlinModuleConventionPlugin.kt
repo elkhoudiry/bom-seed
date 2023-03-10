@@ -59,7 +59,7 @@ fun Project.getLocalProperty(key: String, file: String = "local.properties"): An
             properties.getProperty(key)
         }
         parent != null -> {
-            getLocalProperty(key, file)
+            parent?.getLocalProperty(key, file)
         }
         else -> null
     }
