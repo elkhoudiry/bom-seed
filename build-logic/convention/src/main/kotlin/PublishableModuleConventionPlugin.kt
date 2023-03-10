@@ -16,7 +16,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
                 apply("maven-publish")
             }
 
-            version = getTagOrDefault(parent?.version as String)
+            version = getTagOrDefault(rootProject.version as String)
 
             extensions.getByType<PublishingExtension>().apply {
                 repositories {
@@ -41,6 +41,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
 
                 publication = publishTask.publication
                 repository = publishTask.repository
+                publication.groupId = rootProject.group as String
             }
         }
     }

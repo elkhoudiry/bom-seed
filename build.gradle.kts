@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.elkhoudiry"
-version = "0.1.0"
+version = "0.0.0.1"
 
 tasks.register("publishToGithubPackages") {
     project.subprojects.forEach { subProject ->
