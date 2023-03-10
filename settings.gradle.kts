@@ -18,3 +18,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "bom-elkhoudiry"
 include("core:bom-kt")
+
+include("modules:pub-module-1")
+include("modules:pub-module-2")
+include("modules:pub-module-3")
+include("modules:consume-module")

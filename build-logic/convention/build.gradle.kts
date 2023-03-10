@@ -21,5 +21,9 @@ gradlePlugin {
             id = "publishable.module"
             implementationClass = "PublishableModuleConventionPlugin"
         }
+        register("debuggableModule") {
+            id = "debuggable.module"
+            implementationClass = "DebuggableModuleConventionPlugin"
+        }
     }
 }
