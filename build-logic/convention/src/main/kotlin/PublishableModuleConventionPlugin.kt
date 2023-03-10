@@ -32,7 +32,11 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
                     }
                 }
 
-                publications { this.create<MavenPublication>("maven") }
+                publications {
+                    this.create<MavenPublication>("maven") {
+                        from(components.getByName("java"))
+                    }
+                }
             }
 
             tasks.register(
