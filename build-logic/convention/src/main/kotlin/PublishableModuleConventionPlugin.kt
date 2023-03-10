@@ -16,6 +16,8 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
                 apply("maven-publish")
             }
 
+            version = getTagOrDefault(parent?.version as String)
+
             extensions.getByType<PublishingExtension>().apply {
                 repositories {
                     maven {
@@ -30,8 +32,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             }
 
             tasks.register(
-                "publishModuleToGithubPackages",
-                IncrementalPublishToGithubRepository::class.java
+                "publishModuleToGithubPackages", IncrementalPublishToGithubRepository::class.java
             ) {
                 inputDir = file("src/main")
                 val publishTask = project.tasks.getByPath(
@@ -43,6 +44,20 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             }
         }
     }
+}
+
+fun getTagOrDefault(defaultValue: String): String {
+    val ref = System.getenv("GITHUB_REF")
+
+    if (ref.isNullOrBlank()) {
+        return defaultValue
+    }
+
+    if (ref.startsWith("refs/tags/")) {
+        return ref.substring("refs/tags/".length)
+    }
+
+    return defaultValue
 }
 
 open class IncrementalPublishToGithubRepository : PublishToMavenRepository() {
