@@ -1,23 +1,18 @@
-import groovy.util.Node
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs
-import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
 import java.io.File
 
 class PublishableModuleConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
             pluginManager.apply {
                 apply("maven-publish")
             }
@@ -36,7 +31,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             }
 
             tasks.register(
-                "incrementalPublishToMavenRepository",
+                "incrementalPublishToGithubRepository",
                 IncrementalPublishToMavenRepository::class.java
             ) {
                 inputDir = file("src/main")
