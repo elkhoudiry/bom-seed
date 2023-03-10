@@ -38,9 +38,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
                 }
 
                 publications {
-                    this.create<MavenPublication>("maven") {
-                        from(components.getByName("java"))
-                    }
+                    this.create<MavenPublication>("maven")
                 }
             }
 
