@@ -49,14 +49,18 @@ internal inline fun VersionCatalog.getPlugin(name: String): String {
     return library.get().get().pluginId
 }
 
-fun Project.getLocalProperty(key: String, file: String = "local.properties"): Any {
+fun Project.getLocalProperty(key: String, file: String = "local.properties"): Any? {
     val properties = java.util.Properties()
     val localProperties = File("$projectDir/$file")
-    if (localProperties.isFile) {
-        properties.load(localProperties.reader())
-    } else if (parent != null) {
-        return parent!!.getLocalProperty(key, file)
-    } else error("Local property not found")
 
-    return properties.getProperty(key)
+    return when {
+        localProperties.isFile -> {
+            properties.load(localProperties.reader())
+            properties.getProperty(key)
+        }
+        parent != null -> {
+            getLocalProperty(key, file)
+        }
+        else -> null
+    }
 }
