@@ -15,16 +15,10 @@ class KotlinModuleConventionPlugin : Plugin<Project> {
 
             pluginManager.apply {
                 apply("kotlin")
-                apply(libs.getPlugin("kotlin-serialization"))
             }
 
             dependencies {
-                add(
-                    "implementation",
-                    libs.getLibrary("kotlinx.serialization.json")
-                )
-                add("implementation", libs.getLibrary("kotlinx.datetime"))
-                add("testImplementation", libs.getLibrary("kotlin.test"))
+
             }
         }
     }

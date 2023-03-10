@@ -1,12 +1,15 @@
+import groovy.util.Node
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs
+import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
 import java.io.File
 
@@ -22,17 +25,13 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             extensions.getByType<PublishingExtension>().apply {
                 repositories {
                     maven {
-                        name = "GitHub"
+                        name = "GitHubPackages"
                         url = uri("https://maven.pkg.github.com/" + System.getenv("GITHUB_REPOSITORY"))
                         credentials {
-                            username = ""
+                            username = System.getenv("GITHUB_ACTOR")
                             password = System.getenv("GITHUB_TOKEN")
                         }
                     }
-                }
-
-                publications {
-
                 }
             }
 
@@ -40,7 +39,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
                 "incrementalPublishToMavenRepository",
                 IncrementalPublishToMavenRepository::class.java
             ) {
-                inputDir = file("src")
+                inputDir = file("src/main")
                 val publishTask = project.tasks.getByPath(
                     ":publishMavenPublicationToGitHubPackagesRepository"
                 ) as PublishToMavenRepository
@@ -52,7 +51,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
     }
 }
 
-class IncrementalPublishToMavenRepository : PublishToMavenRepository() {
+open class IncrementalPublishToMavenRepository : PublishToMavenRepository() {
     @InputDirectory
     lateinit var inputDir: File
 

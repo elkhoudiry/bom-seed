@@ -17,5 +17,9 @@ gradlePlugin {
             id = "kotlin.module"
             implementationClass = "KotlinModuleConventionPlugin"
         }
+        register("publishableModule") {
+            id = "publishable.module"
+            implementationClass = "PublishableModuleConventionPlugin"
+        }
     }
 }
