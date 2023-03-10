@@ -1,11 +1,13 @@
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.incremental.IncrementalTaskInputs
+import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.getByType
 import java.io.File
 
@@ -29,6 +31,8 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
                         }
                     }
                 }
+
+                publications { this.create<MavenPublication>("maven") }
             }
 
             tasks.register(
@@ -45,31 +49,31 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             }
         }
     }
-}
 
-fun getTagOrDefault(defaultValue: String): String {
-    val ref = System.getenv("GITHUB_REF")
+    private fun getTagOrDefault(defaultValue: String): String {
+        val ref = System.getenv("GITHUB_REF")
 
-    if (ref.isNullOrBlank()) {
+        if (ref.isNullOrBlank()) {
+            return defaultValue
+        }
+
+        if (ref.startsWith("refs/tags/")) {
+            return ref.substring("refs/tags/".length)
+        }
+
         return defaultValue
     }
 
-    if (ref.startsWith("refs/tags/")) {
-        return ref.substring("refs/tags/".length)
-    }
+    open class IncrementalPublishToGithubRepository : PublishToMavenRepository() {
+        @InputDirectory
+        lateinit var inputDir: File
 
-    return defaultValue
-}
+        @OutputDirectory
+        val generatedFileDir = project.file("${project.buildDir}/libs")
 
-open class IncrementalPublishToGithubRepository : PublishToMavenRepository() {
-    @InputDirectory
-    lateinit var inputDir: File
-
-    @OutputDirectory
-    val generatedFileDir = project.file("${project.buildDir}/libs")
-
-    @TaskAction
-    fun perform(inputs: IncrementalTaskInputs) {
-        println("publishing project: ${project.name}")
+        @TaskAction
+        fun perform(inputs: IncrementalTaskInputs) {
+            println("publishing project: ${project.name}")
+        }
     }
 }

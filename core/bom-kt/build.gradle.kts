@@ -7,7 +7,7 @@ plugins {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        getByName<MavenPublication>("maven") {
             pom {
                 val versionPropertiesFile = File("$projectDir/src/main/versions/_versions.properties")
                 val versionProperties = Properties()
