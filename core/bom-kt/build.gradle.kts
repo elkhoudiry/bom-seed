@@ -1,8 +1,4 @@
-import groovy.lang.Closure
-import org.gradle.api.internal.artifacts.dependencies.DefaultClientModule
-import org.jetbrains.kotlin.tooling.core.closure
 import java.util.Properties
-import java.util.regex.Pattern
 
 plugins {
     id("kotlin.module")
@@ -11,7 +7,8 @@ plugins {
 
 publishing {
     publications {
-        create<MavenPublication>(project.name) {this
+        create<MavenPublication>(project.name) {
+            this
             pom {
                 val versionPropertiesFile = File("$projectDir/src/main/versions/_versions.properties")
                 val versionProperties = Properties()
@@ -33,11 +30,16 @@ publishing {
                         versions.load(propertyFile.reader())
 
                         versions.forEach {
-                            val lastVersion = if (it.value is String && (it.value as String).matches(Regex("/\\d.*/"))) it.value else "\${$it.value}"
-
+                            val lastVersion =
+                                if (it.value is String && (it.value as String).matches(Regex("/\\d.*/"))) it.value else "\${$it.value}"
                         }
                     }
                 }
+            }
+
+            pom.withXml {
+                val dependenciesNode = asNode().appendNode("dependencies")
+                val dependenciesManagementNode = asNode().appendNode("dependencyManagement").appendNode("dependencies")
             }
         }
     }
