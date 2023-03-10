@@ -42,6 +42,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             tasks.register(
                 "publishModuleToGithubPackages", IncrementalPublishToGithubRepository::class.java
             ) {
+                dependsOn("${project.path}:build")
                 inputDir = file("src/main")
                 val publishTask = project.tasks.getByPath(
                     "${project.path}:publishMavenPublicationToGitHubPackagesRepository"
