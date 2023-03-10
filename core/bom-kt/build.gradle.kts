@@ -14,7 +14,10 @@ publishing {
                 versionProperties.load(versionPropertiesFile.reader())
 
                 versionProperties.forEach {
-                    properties.put("${it.key}", it.value as String)
+                    properties.put(
+                        "${it.key}",
+                        PublishableModuleConventionPlugin.getTagOrDefault(rootProject.version as String)
+                    )
                 }
             }
 
@@ -26,8 +29,6 @@ publishing {
                         continue
                     }
 
-                    val groupIdFromFile = propertyFile.name.replace(".properties", "")
-
                     val versions = Properties()
                     versions.load(propertyFile.reader())
 
@@ -35,7 +36,7 @@ publishing {
                         val lastVersion =
                             if (it.value is String && (it.value as String).matches(Regex("/\\d.*/"))) it.value else "\${$it.value}"
                         val dependencyNode = dependenciesManagementNode.appendNode("dependency")
-                        dependencyNode.appendNode("groupId", groupIdFromFile)
+                        dependencyNode.appendNode("groupId", groupId)
                         dependencyNode.appendNode("artifactId", it.key as String)
                         dependencyNode.appendNode("version", lastVersion as String)
                     }

@@ -50,20 +50,6 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
         }
     }
 
-    private fun getTagOrDefault(defaultValue: String): String {
-        val ref = System.getenv("GITHUB_REF")
-
-        if (ref.isNullOrBlank()) {
-            return defaultValue
-        }
-
-        if (ref.startsWith("refs/tags/")) {
-            return ref.substring("refs/tags/".length)
-        }
-
-        return defaultValue
-    }
-
     open class IncrementalPublishToGithubRepository : PublishToMavenRepository() {
         @InputDirectory
         lateinit var inputDir: File
@@ -74,6 +60,22 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
         @TaskAction
         fun perform(inputs: IncrementalTaskInputs) {
             println("publishing project: ${project.name}")
+        }
+    }
+
+    companion object {
+        fun getTagOrDefault(defaultValue: String): String {
+            val ref = System.getenv("GITHUB_REF")
+
+            if (ref.isNullOrBlank()) {
+                return defaultValue
+            }
+
+            if (ref.startsWith("refs/tags/")) {
+                return ref.substring("refs/tags/".length)
+            }
+
+            return defaultValue
         }
     }
 }
