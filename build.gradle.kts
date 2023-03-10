@@ -4,3 +4,11 @@ plugins {
 }
 
 group = "me.elkhoudiry"
+
+tasks.register("publishToGithubPackages") {
+    project.subprojects.forEach { subProject ->
+        subProject.tasks.find { subTask -> subTask.name == "publishModuleToGithubPackages" }?.let {
+            dependsOn(it)
+        }
+    }
+}
