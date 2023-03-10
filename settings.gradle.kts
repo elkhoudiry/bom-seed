@@ -9,10 +9,11 @@ pluginManagement {
 
 dependencyResolutionManagement {
     val properties = java.util.Properties()
-    val user by lazy { properties.getProperty("github.user") ?: System.getenv("GITHUB_ACTOR")  }
-    val token by lazy { properties.getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")  }
+    val file = File("${rootDir}/local.properties")
+    val user by lazy { properties.getProperty("github.user") ?: System.getenv("GITHUB_ACTOR") }
+    val token by lazy { properties.getProperty("github.token") ?: System.getenv("GITHUB_TOKEN") }
 
-    properties.load(File("${rootDir}/local.properties").reader())
+    if (file.exists()) properties.load(file.reader())
 
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
