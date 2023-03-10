@@ -1,6 +1,5 @@
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.tasks.InputDirectory
@@ -31,12 +30,15 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
             }
 
             tasks.register(
-                "incrementalPublishToGithubRepository",
-                IncrementalPublishToMavenRepository::class.java
+                "publishModuleToGithubPackages",
+                IncrementalPublishToGithubRepository::class.java
             ) {
                 inputDir = file("src/main")
+                project.tasks.forEach {
+                    println("task: ${it.path}")
+                }
                 val publishTask = project.tasks.getByPath(
-                    ":publishMavenPublicationToGitHubPackagesRepository"
+                    "${project.path}:publishMavenPublicationToGitHubPackagesRepository"
                 ) as PublishToMavenRepository
 
                 publication = publishTask.publication
@@ -46,7 +48,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
     }
 }
 
-open class IncrementalPublishToMavenRepository : PublishToMavenRepository() {
+open class IncrementalPublishToGithubRepository : PublishToMavenRepository() {
     @InputDirectory
     lateinit var inputDir: File
 
