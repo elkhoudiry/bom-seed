@@ -64,3 +64,16 @@ fun Project.getLocalProperty(key: String, file: String = "local.properties"): An
         else -> null
     }
 }
+
+fun Project.getAllChildren(): List<Project>{
+    val list = arrayListOf<Project>()
+
+    list.addAll(childProjects.map { it.value })
+    list.addAll(childProjects.map { it.value.getAllChildren() }.flatten())
+
+    return list
+}
+
+fun Project.getArtifactId(): String {
+    return path.replace(":", "-").removeSuffix("-").removePrefix("-")
+}

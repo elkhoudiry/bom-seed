@@ -13,3 +13,11 @@ tasks.register("publishToGithubPackages") {
         }
     }
 }
+
+tasks.withType<Test>().configureEach {
+    if (!project.hasProperty("createReports")) {
+        reports.html.required.set(false)
+        reports.junitXml.required.set(false)
+    }
+}
+
