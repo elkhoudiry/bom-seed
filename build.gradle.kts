@@ -67,6 +67,8 @@ tasks.register("revertPublishToGithub") {
         val builder = ProcessBuilder(command.split(' '))
         val process = builder.start()
         process.waitFor()
+        println("[LOG] error: ${String(process.errorStream.readAllBytes())}")
+        println("[LOG] result: ${String(process.inputStream.readAllBytes())}")
     }
 }
 
