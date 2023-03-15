@@ -48,7 +48,7 @@ jobs:
       - name: Publish package
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: -i publishToGithubPackages
+          arguments: publishToGithubPackages
           cache-read-only: false
         env:
           PUBLISH_VERSION: ${{ steps.prepare_version.outputs.version }}
