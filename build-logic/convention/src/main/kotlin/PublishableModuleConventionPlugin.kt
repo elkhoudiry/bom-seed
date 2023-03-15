@@ -63,7 +63,6 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
         }
     }
 
-    @CacheableTask
     abstract class IncrementalPublishToGithubRepository : PublishToMavenRepository() {
         init {
             dependsOn("${project.path}:sourceCodeCheck")

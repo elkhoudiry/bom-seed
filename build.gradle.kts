@@ -1,10 +1,11 @@
+import java.util.Properties
 
 plugins {
     kotlin("jvm") version "1.8.10"
 }
 
 group = "me.elkhoudiry"
-version = "0.0.0.27"
+version = getLocalProperty("local.version")!!
 
 tasks.register("publishToGithubPackages") {
     project.subprojects.forEach { subProject ->
@@ -23,4 +24,20 @@ tasks.withType<Test>().configureEach {
 
 subprojects {
     tasks.register<SourceCodeCheckTask>("sourceCodeCheck")
+}
+
+fun Project.getLocalProperty(key: String, file: String = "local.properties"): Any? {
+    val properties = Properties()
+    val localProperties = File("$projectDir/$file")
+
+    return when {
+        localProperties.isFile -> {
+            properties.load(localProperties.reader())
+            properties.getProperty(key)
+        }
+        parent != null -> {
+            parent?.getLocalProperty(key, file)
+        }
+        else -> null
+    }
 }
