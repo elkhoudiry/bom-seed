@@ -18,7 +18,7 @@ jobs:
           ref: dev
           fetch-depth: 0
 
-      - name: Restore Cache
+      - name: Restore cache
         uses: actions/cache/restore@v3
         with:
           path: |
@@ -59,7 +59,7 @@ jobs:
           custom_tag: ${{ steps.prepare_version.outputs.version }}
           tag_prefix: ""
 
-      - name: Restore Cache
+      - name: Save cache
         uses: actions/cache/save@v3
         if: success()
         with:
