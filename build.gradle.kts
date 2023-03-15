@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "me.elkhoudiry"
-version = getLocalProperty("local.version") ?: "0.0.1"
+version = getLocalProperty("local.version") ?: "0.0.0"
 
 tasks.withType<Test>()
     .configureEach {
