@@ -65,7 +65,7 @@ jobs:
         if: success()
         with:
           add: '**/publish.properties **/metadata.properties'
-          message: 'committing publish properties: ' + ${{ steps.prepare_version.outputs.version }}
+          message: 'committing publish properties: ${{ steps.prepare_version.outputs.version }}'
 
       - name: Push new tag
         uses: mathieudutour/github-tag-action@v6.1
