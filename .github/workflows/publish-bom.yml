@@ -2,8 +2,8 @@ name: Publish BOM
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - dev
   workflow_dispatch:
 
 jobs:
@@ -23,10 +23,24 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
+      - name: Prepare version
+        id: prepare_version
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 --always | grep -E '[0-9]+.[0-9]+.[0-9]+')
+          CURRENT_VERSION=${LATEST_TAG:-0.0.0}"
+          echo "version=${CURRENT_VERSION[0]}.${CURRENT_VERSION[1]}.$((${CURRENT_VERSION[2]} + 1))" >> $GITHUB_OUTPUT
+
       - name: Publish package
         uses: gradle/gradle-build-action@v2
         with:
           arguments: publishToGithubPackages
           cache-read-only: false
         env:
+          PUBLISH_VERSION: steps.prepare_version.outputs.version
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push new tag
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: steps.prepare_version.outputs.version
