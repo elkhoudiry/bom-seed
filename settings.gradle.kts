@@ -32,7 +32,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "bom-elkhoudiry"
-include("core:bom-kt")
+include("core:bom")
 
 include("modules:pub-module-1")
 include("modules:pub-module-2")

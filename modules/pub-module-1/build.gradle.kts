@@ -1,6 +1,6 @@
 plugins {
     id("kotlin.module")
-    id("java.publishable.module")
+    id("publish.java.module")
     id("debuggable.module")
 }
 

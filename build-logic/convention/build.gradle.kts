@@ -13,17 +13,25 @@ dependencies {
 
 gradlePlugin {
     plugins {
+        register("buildModule") {
+            id = "build.module"
+            implementationClass = "BuildConventionPlugin"
+        }
         register("KotlinModule") {
             id = "kotlin.module"
             implementationClass = "KotlinModuleConventionPlugin"
         }
-        register("publishableModule") {
-            id = "publishable.module"
-            implementationClass = "PublishableModuleConventionPlugin"
+        register("publishModule") {
+            id = "publish.module"
+            implementationClass = "publish.PublishConventionPlugin"
         }
-        register("javaPublishableModule") {
-            id = "java.publishable.module"
-            implementationClass = "JavaPublishableModuleConventionPlugin"
+        register("publishJavaModule") {
+            id = "publish.java.module"
+            implementationClass = "publish.PublishJavaConventionPlugin"
+        }
+        register("publishBomModule") {
+            id = "publish.bom.module"
+            implementationClass = "publish.PublishBomConventionPlugin"
         }
         register("debuggableModule") {
             id = "debuggable.module"
