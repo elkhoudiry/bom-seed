@@ -34,6 +34,14 @@ tasks.register("publishToGithub") {
         }
 }
 
+tasks.register("clearPublishCache") {
+    val commitMessage = System.getenv("LATEST_COMMIT_MESSAGE")
+    val dir = File("${projectDir.path}/.gradle")
+    if (!commitMessage.contains("[clear publish cache]")) return@register
+
+    dir.deleteRecursively()
+}
+
 tasks.register("revertPublishToGithub") {
     val file = File("${projectDir.path}/publish.local.properties")
     val properties = Properties()
