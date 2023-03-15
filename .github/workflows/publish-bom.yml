@@ -54,6 +54,11 @@ jobs:
           PUBLISH_VERSION: ${{ steps.prepare_version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Commit publish properties
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: '**/publish.properties **/metadata.properties'
+
       - name: Push new tag
         uses: mathieudutour/github-tag-action@v6.1
         with:
