@@ -28,7 +28,9 @@ jobs:
         run: |
           LATEST_TAG=$(git describe --tags --abbrev=0 --always | grep -E '[0-9]+.[0-9]+.[0-9]+')
           CURRENT_VERSION="${LATEST_TAG:-0.0.0}"
-          echo "version=${CURRENT_VERSION[0]}.${CURRENT_VERSION[1]}.$((${CURRENT_VERSION[2]} + 1))" >> $GITHUB_OUTPUT
+          NEW_VERSION=${CURRENT_VERSION[0]}.${CURRENT_VERSION[1]}.$((${CURRENT_VERSION[2]} + 1))
+          echo $NEW_VERSION
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Publish package
         uses: gradle/gradle-build-action@v2

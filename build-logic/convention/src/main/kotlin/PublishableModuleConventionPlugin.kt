@@ -79,7 +79,12 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
     companion object {
         fun getVersionOrDefault(defaultValue: String): String {
             val version = System.getenv("PUBLISH_VERSION")
-            return version.ifBlank { defaultValue }
+
+            return if (version.isNullOrBlank()) {
+                defaultValue
+            } else {
+                version
+            }
         }
     }
 }

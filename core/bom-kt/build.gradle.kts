@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     id("kotlin.module")
     id("publishable.module")
@@ -11,7 +9,7 @@ publishing {
             pom {
                 properties.put(
                     "bom.version",
-                    PublishableModuleConventionPlugin.getTagOrDefault(rootProject.version as String)
+                    PublishableModuleConventionPlugin.getVersionOrDefault(rootProject.version as String)
                 )
             }
 
