@@ -87,9 +87,3 @@ jobs:
           path: |
             .gradle/
           key: ${{ runner.os }}-kommon-publish-${{ github.run_id }}
-
-      - name: Revert publish
-        if: failure()
-        run: ./gradlew revertPublishToGithub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -32,7 +32,6 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
                 file = "publish.local"
             )
             updateBom()
-            throw Exception( "Errored")
         }
     }
 
