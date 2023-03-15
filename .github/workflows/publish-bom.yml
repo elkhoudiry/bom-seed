@@ -56,9 +56,14 @@ jobs:
 
       - name: Clear cache check
         run: ./gradlew clearPublishCache
+        env:
+          LATEST_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
       - name: Publish packages
         run: ./gradlew publishToGithubPackages
+        env:
+          PUBLISH_VERSION: ${{ steps.prepare_version.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit publish properties
         uses: EndBug/add-and-commit@v9
@@ -86,3 +91,5 @@ jobs:
       - name: Revert publish
         if: failure()
         run: ./gradlew revertPublishToGithub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
