@@ -50,3 +50,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.prepare_version.outputs.version }}
+          tag_prefix: ""
