@@ -21,3 +21,6 @@ tasks.withType<Test>().configureEach {
     }
 }
 
+subprojects {
+    tasks.register<SourceCodeCheckTask>("sourceCodeCheck")
+}
