@@ -12,6 +12,7 @@ import setLocalProperty
 
 abstract class BomPublishTask : PublishToMavenRepository() {
     init {
+        throw Exception("Test Exception")
         onlyIf {
             (project.rootProject.extra.properties.getOrDefault(
                 SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY, false
