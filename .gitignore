@@ -11,5 +11,5 @@ gradle-app.setting
 
 **.hprof
 
-**/local.properties
+**/*local.properties
 
