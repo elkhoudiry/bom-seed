@@ -12,7 +12,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: read|write
       packages: write
     steps:
       - uses: actions/checkout@v3
@@ -56,16 +56,19 @@ jobs:
 
       - name: Commit publish properties
         uses: EndBug/add-and-commit@v9
+        if: success()
         with:
           add: '**/publish.properties **/metadata.properties'
           message: 'Committing publish properties'
 
       - name: Push new tag
         uses: mathieudutour/github-tag-action@v6.1
+        if: success()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.prepare_version.outputs.version }}
           tag_prefix: ""
+
 
       - name: Save cache
         uses: actions/cache/save@v3
@@ -74,3 +77,7 @@ jobs:
           path: |
             .gradle/
           key: ${{ runner.os }}-kommon-publish-${{ github.run_id }}
+
+      - name: Delete cache
+        if: failure()
+        run: ./gradlew revertPublishToGithub

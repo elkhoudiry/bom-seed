@@ -1,8 +1,10 @@
 package tasks
 
 import getAllChildren
+import getLatestPublishedVersion
 import getNewPublishVersion
 import getPublishArtifactId
+import getPublishGroup
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.extra
@@ -20,6 +22,11 @@ abstract class BomPublishTask : PublishToMavenRepository() {
                 key = "version",
                 value = project.getNewPublishVersion(),
                 file = "publish"
+            )
+            project.rootProject.setLocalProperty(
+                key = project.getPublishArtifactId(),
+                value = project.getLatestPublishedVersion(),
+                file = "publish.local"
             )
         }
     }

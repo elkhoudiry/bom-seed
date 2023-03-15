@@ -3,6 +3,7 @@ package publish
 import getPublishArtifactId
 import getLocalProperty
 import getNewPublishVersion
+import getPublishGroup
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
@@ -42,7 +43,7 @@ class PublishConventionPlugin : Plugin<Project> {
 
                     publications {
                         this.create<MavenPublication>("maven") {
-                            groupId = rootProject.group as String
+                            groupId = project.getPublishGroup()
                             artifactId = project.getPublishArtifactId()
                             version = project.getNewPublishVersion()
                         }

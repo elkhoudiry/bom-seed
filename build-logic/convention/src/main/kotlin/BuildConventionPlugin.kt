@@ -85,6 +85,10 @@ fun Project.getAllChildren(): List<Project> {
     return list
 }
 
+fun Project.getPublishGroup(): String {
+    return rootProject.group as String
+}
+
 fun Project.getPublishArtifactId(): String {
     return path.replace(":", "-")
         .removeSuffix("-")
