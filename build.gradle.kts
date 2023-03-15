@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.elkhoudiry"
-version = getLocalProperty("local.version")!!
+version = getLocalProperty("local.version") ?: "0.0.1"
 
 tasks.register("publishToGithubPackages") {
     project.subprojects.forEach { subProject ->
