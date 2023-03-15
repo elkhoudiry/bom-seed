@@ -34,6 +34,5 @@ abstract class BomPublishTask : PublishToMavenRepository() {
     @TaskAction
     fun perform() {
         println("[LOG] publishing bom: ${project.getPublishArtifactId()}")
-        throw Exception("Test Exception")
     }
 }
