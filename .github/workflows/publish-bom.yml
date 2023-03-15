@@ -27,7 +27,7 @@ jobs:
         id: prepare_version
         run: |
           LATEST_TAG=$(git describe --tags --abbrev=0 --always | grep -E '[0-9]+.[0-9]+.[0-9]+')
-          CURRENT_VERSION=${LATEST_TAG:-0.0.0}"
+          CURRENT_VERSION="${LATEST_TAG:-0.0.0}"
           echo "version=${CURRENT_VERSION[0]}.${CURRENT_VERSION[1]}.$((${CURRENT_VERSION[2]} + 1))" >> $GITHUB_OUTPUT
 
       - name: Publish package
