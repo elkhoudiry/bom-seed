@@ -20,7 +20,6 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
         }
         dependsOn("${project.path}:build")
         doLast {
-            throw Exception( "Errored")
 
             project.setLocalProperty(
                 key = "version",
@@ -33,6 +32,7 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
                 file = "publish.local"
             )
             updateBom()
+            throw Exception( "Errored")
         }
     }
 
