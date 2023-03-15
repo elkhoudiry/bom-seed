@@ -3,6 +3,7 @@ import org.gradle.api.Project
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.extra
@@ -62,6 +63,7 @@ class PublishableModuleConventionPlugin : Plugin<Project> {
         }
     }
 
+    @CacheableTask
     abstract class IncrementalPublishToGithubRepository : PublishToMavenRepository() {
         init {
             dependsOn("${project.path}:sourceCodeCheck")
