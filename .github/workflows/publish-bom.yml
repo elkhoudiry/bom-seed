@@ -75,7 +75,6 @@ jobs:
           custom_tag: ${{ steps.prepare_version.outputs.version }}
           tag_prefix: ""
 
-
       - name: Save cache
         uses: actions/cache/save@v3
         if: success()
@@ -84,6 +83,6 @@ jobs:
             .gradle/
           key: ${{ runner.os }}-kommon-publish-${{ github.run_id }}
 
-      - name: Delete cache
+      - name: Revert publish
         if: failure()
         run: ./gradlew revertPublishToGithub
