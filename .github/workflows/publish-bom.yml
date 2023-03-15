@@ -18,6 +18,13 @@ jobs:
           ref: dev
           fetch-depth: 0
 
+      - name: Restore Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            .gradle/
+          key: ${{ runner.os }}-kommon-publish
+
       - uses: actions/setup-java@v3
         with:
           java-version: '11'
@@ -51,3 +58,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.prepare_version.outputs.version }}
           tag_prefix: ""
+
+      - name: Restore Cache
+        uses: actions/cache/save@v3
+        if: success()
+        with:
+          path: |
+            .gradle/
+          key: ${{ runner.os }}-kommon-publish-${{ github.run_id }}
