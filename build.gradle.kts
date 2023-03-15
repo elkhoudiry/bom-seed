@@ -53,6 +53,7 @@ tasks.register("revertPublishToGithub") {
     for (property in properties) {
         val version = property.value
         val name = "$group/${property.key as String}"
+        println("[LOG] reverting: $name:$version")
         val command = """
             curl -L \
                 -X DELETE \
