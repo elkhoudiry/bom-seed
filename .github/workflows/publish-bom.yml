@@ -49,4 +49,4 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: steps.prepare_version.outputs.version
+          custom_tag: ${{ steps.prepare_version.outputs.version }}
