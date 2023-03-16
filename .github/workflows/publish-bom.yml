@@ -63,7 +63,7 @@ jobs:
           LATEST_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
 
       - name: Publish packages
-        run: ./gradlew publishToGithubPackages
+        run: ./gradlew -i publishToGithubPackages
         env:
           PUBLISH_REF: ${{ steps.prepare_version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
