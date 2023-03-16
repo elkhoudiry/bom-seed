@@ -20,7 +20,6 @@ tasks.withType<Test>()
         }
     }
 
-
 tasks.register("publishToGithub") {
     val childTasks by lazy {
         project.subprojects.filter { subProject ->
@@ -29,10 +28,13 @@ tasks.register("publishToGithub") {
             .map { "${it.path}:publishToGithubPackages" }
     }
 
+    dependsOn(childTasks)
+}
+
+tasks.register("publishBomToGithub") {
     subprojects.find { it.name == "bom" }
         ?.let { bom ->
-            bom.tasks["publishBomToGithubPackages"].dependsOn(childTasks)
-            this.finalizedBy(bom.tasks["publishBomToGithubPackages"])
+           dependsOn("${bom.path}:publishBomToGithubPackages")
         }
 }
 

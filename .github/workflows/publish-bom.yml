@@ -68,6 +68,12 @@ jobs:
           PUBLISH_REF: ${{ steps.prepare_version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Publish bom
+        run: ./gradlew -i publishBomToGithub
+        env:
+          PUBLISH_REF: ${{ steps.prepare_version.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Update README
         if: success()
         run: ./gradlew updateREADME
