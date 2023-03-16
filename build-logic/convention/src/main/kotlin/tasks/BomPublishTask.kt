@@ -12,6 +12,8 @@ import setLocalProperty
 
 abstract class BomPublishTask : PublishToMavenRepository() {
     init {
+        println("[LOG] init BOM task")
+
         onlyIf {
             val check = project.rootProject.extra.properties.getOrDefault(
                 SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY, false
