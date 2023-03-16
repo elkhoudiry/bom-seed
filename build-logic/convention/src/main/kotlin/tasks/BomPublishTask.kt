@@ -13,9 +13,11 @@ import setLocalProperty
 abstract class BomPublishTask : PublishToMavenRepository() {
     init {
         onlyIf {
-            (project.rootProject.extra.properties.getOrDefault(
+            val check = project.rootProject.extra.properties.getOrDefault(
                 SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY, false
-            ) as Boolean)
+            ) as Boolean
+            println("[LOG] BOM Check: $check")
+            check
         }
         doLast {
             project.setLocalProperty(
