@@ -15,6 +15,7 @@ abstract class BomPublishTask : PublishToMavenRepository() {
                 values = mapOf("version" to project.getNewPublishVersion()),
                 file = "publish"
             )
+
             project.updatePublishProperties()
         }
     }
