@@ -43,6 +43,8 @@ jobs:
           CURRENT_VERSION="${LATEST_TAG:-0.0.0}"
           IFS='.' read -ra VERSION_SPLIT <<< $CURRENT_VERSION          
           NEW_VERSION=${VERSION_SPLIT[0]}.${VERSION_SPLIT[1]}.$((${VERSION_SPLIT[2]} + 1))
+          REF_TAG=$(echo "${GITHUB_REF}" | grep -E 'ref/tags/*' | awk '{split($0, a, "/"); print a[3]}') 
+          NEW_VERSION="${REF_TAG:-$NEW_VERSION}"
           echo new version: $NEW_VERSION
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
@@ -63,7 +65,7 @@ jobs:
       - name: Publish packages
         run: ./gradlew publishToGithubPackages
         env:
-          PUBLISH_VERSION: ${{ steps.prepare_version.outputs.version }}
+          PUBLISH_REF: ${{ steps.prepare_version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit publish properties

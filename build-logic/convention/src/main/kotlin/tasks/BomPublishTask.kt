@@ -23,11 +23,7 @@ abstract class BomPublishTask : PublishToMavenRepository() {
                 value = project.getNewPublishVersion(),
                 file = "publish"
             )
-            project.rootProject.setLocalProperty(
-                key = project.getPublishArtifactId(),
-                value = project.getLatestPublishedVersion(),
-                file = "publish.local"
-            )
+            project.updatePublishProperties()
         }
     }
 

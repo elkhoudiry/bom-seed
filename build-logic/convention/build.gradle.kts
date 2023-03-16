@@ -9,6 +9,8 @@ java {
 
 dependencies {
     compileOnly(libs.android.gradlePlugin)
+
+    testImplementation(libs.kotlin.test)
 }
 
 gradlePlugin {

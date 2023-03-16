@@ -4,8 +4,9 @@ import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.provider.Provider
 import java.io.File
+import java.util.Properties
 
-class BuildConventionPlugin: Plugin<Project> {
+class BuildConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = Unit
 }
 
@@ -45,6 +46,7 @@ fun Project.getLocalProperty(
     return when {
         localProperties.isFile -> {
             properties.load(localProperties.reader())
+            localProperties.reader().close()
             properties.getProperty(key)
         }
 
@@ -54,6 +56,18 @@ fun Project.getLocalProperty(
 
         else -> null
     }
+}
+
+fun Project.getLocalPropertiesFromFile(name: String = "local"): Properties{
+    val publishProperties = Properties().apply {
+        val propertiesFile = File("$projectDir/$name.properties")
+        if (propertiesFile.exists()){
+            load(propertiesFile.reader())
+            propertiesFile.reader().close()
+        }
+    }
+
+    return publishProperties
 }
 
 fun Project.setLocalProperty(
@@ -73,6 +87,7 @@ fun Project.setLocalProperty(
     properties[key] = value
 
     properties.store(propertiesFile.outputStream(), null)
+    propertiesFile.outputStream().close()
 }
 
 fun Project.getAllChildren(): List<Project> {
@@ -102,23 +117,36 @@ fun Project.getLatestPublishedVersion(): String {
         recursive = false
     )
 
-    return if (property is String) property else rootProject.version.toString()
+    return if (property != null && property is String) property else "0.0.0"
 }
 
 fun Project.getNewPublishVersion(): String {
-    val envVersion = System.getenv("PUBLISH_VERSION")
+    val envVersion = System.getenv("PUBLISH_REF")
     val localVersion by lazy { getLatestPublishedVersion() }
 
     if (!envVersion.isNullOrBlank()) {
-        return envVersion
+        return getVersionFromRef(envVersion, localVersion)
     }
 
-    return localVersion.replaceAfterLast(
-        delimiter = ".",
-        replacement = "${
-            localVersion.split(".")
-                .last()
-                .toInt() + 1
-        }"
-    )
+    return getVersionFromRef(localVersion, localVersion)
+}
+
+internal fun getVersionFromRef(
+    ref: String,
+    current: String
+): String {
+    val (major, minor) = ref.split(".")
+        .map { it.toInt() }
+    val (currentMajor, currentMinor, currentPatch) = current.split(".")
+        .map { it.toInt() }
+
+    if (major > currentMajor) {
+        return "$major.0.0"
+    }
+
+    if (minor > currentMinor){
+        return "$major.$minor.0"
+    }
+
+    return "$currentMajor.$currentMinor.${currentPatch + 1}"
 }

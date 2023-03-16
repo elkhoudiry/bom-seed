@@ -1,4 +1,7 @@
 import tasks.SourceCodePublishCheckTask
+import java.text.SimpleDateFormat
+import java.time.Clock
+import java.util.*
 
 
 plugins {
@@ -40,13 +43,56 @@ tasks.register("clearPublishCache") {
     dir.deleteRecursively()
 }
 
+tasks.register("updateREADME") {
+    val readmeFile = File("$projectDir/README.md")
+    val readmeContent = readmeFile.readText()
+    val properties = getLocalPropertiesFromFile("publish")
+    val modules = properties.keys.map {
+        (it as String).split(".")
+            .first()
+    }
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd-k:m:s.S")
+    var tableContent = ""
+
+    for (module in modules) {
+        tableContent += "| $module |"
+
+        for (releaseNumber in 1..5) {
+            val release = "$module.v$releaseNumber"
+            val version = properties["$release.version"] ?: "-"
+            val time = (properties["$release.time"] as String?)?.toLong() ?: Clock.systemUTC()
+                .millis()
+
+            tableContent += " $version<br> ${dateFormatter.format(Date(time))} |"
+        }
+        tableContent += "\n"
+    }
+
+    println("[LOG] table:\n$tableContent")
+
+    readmeFile.writeText(
+        readmeContent.replace(
+            Regex("#### Releases(.|\n)*##### End of releases"), """
+#### Releases
+                
+| Module | Latest | #2 | #3 | #4 | #5 |
+| :----: | :----: | :----: | :----: | :----: | :----: |
+$tableContent                
+                
+##### End of releases
+            """.trimIndent()
+        )
+    )
+
+}
+
 subprojects {
     tasks.register<SourceCodePublishCheckTask>("sourceCodeCheck")
 }
 
 fun shouldClearCache(): Boolean {
-    val commitMessage = System.getenv("LATEST_COMMIT_MESSAGE")
-    val ref = System.getenv("GITHUB_REF")
+    val commitMessage = System.getenv("LATEST_COMMIT_MESSAGE") ?: ""
+    val ref = System.getenv("GITHUB_REF") ?: ""
 
     if (commitMessage.contains("[clear publish cache]")) {
         println("[LOG] clearing cache on commit trigger")
