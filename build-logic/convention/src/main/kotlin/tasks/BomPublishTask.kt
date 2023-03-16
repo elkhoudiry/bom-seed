@@ -16,6 +16,8 @@ abstract class BomPublishTask : PublishToMavenRepository() {
                 file = "publish"
             )
 
+
+
             project.updatePublishProperties()
         }
     }
