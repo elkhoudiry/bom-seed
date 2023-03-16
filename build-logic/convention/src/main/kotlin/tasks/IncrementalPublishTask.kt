@@ -26,8 +26,8 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
                 values = mapOf("version" to project.getNewPublishVersion()),
                 file = "publish"
             )
-            updateBom()
             project.updatePublishProperties()
+            updateBom()
         }
     }
 
@@ -62,6 +62,9 @@ internal fun Project.updatePublishProperties() {
         (it.key as String).startsWith(project.getPublishArtifactId())
     }
     val values = mutableMapOf<String, String>()
+    println("[LOG] updating publishing ${moduleProperties.toList().joinToString { 
+        "${it.first} to ${it.second}"
+    }}")
     for (i in 1..5) {
         val release = "v$i"
         val previousRelease = "v${i - 1}"

@@ -10,7 +10,11 @@ import setLocalProperty
 
 abstract class BomPublishTask : PublishToMavenRepository() {
     init {
-        println("[LOG] init BOM task")
+        onlyIf {
+            (project.rootProject.extra.properties.getOrDefault(
+                "code-changed", false
+            ) as Boolean)
+        }
         doLast {
             project.setLocalProperty(
                 values = mapOf("version" to project.getNewPublishVersion()),

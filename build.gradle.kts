@@ -29,12 +29,9 @@ tasks.register("publishToGithub") {
             .map { "${it.path}:publishToGithubPackages" }
     }
 
-    for (i in 0 until childTasks.size - 1) {
-        dependsOn(childTasks[i])
-    }
-
     subprojects.find { it.name == "bom" }
         ?.let { bom ->
+            bom.tasks["publishBomToGithubPackages"].dependsOn(childTasks)
             dependsOn(bom.tasks["publishBomToGithubPackages"])
         }
 }
