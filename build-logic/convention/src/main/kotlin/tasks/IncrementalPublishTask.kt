@@ -17,7 +17,7 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
         dependsOn("${project.path}:sourceCodeCheck")
         onlyIf {
             (project.extra.properties.getOrDefault(
-                SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY, false
+                "code-changed", false
             ) as Boolean)
         }
         dependsOn("${project.path}:build")
@@ -48,10 +48,7 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
                     file = "metadata"
                 )
             }
-        project.rootProject.extra.set(
-            SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY,
-            true
-        )
+        project.rootProject.extra.set("code-changed", true)
     }
 }
 

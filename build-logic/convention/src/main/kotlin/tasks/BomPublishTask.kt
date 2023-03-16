@@ -22,14 +22,6 @@ abstract class BomPublishTask : PublishToMavenRepository() {
 
     @TaskAction
     fun perform() {
-        val check = project.rootProject.extra.properties.getOrDefault(
-            SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY, false
-        ) as Boolean
-
-        if (!check) {
-            throw GradleException("Nothing to publish")
-        }
-
         println("[LOG] publishing bom: ${project.getPublishArtifactId()}")
     }
 }

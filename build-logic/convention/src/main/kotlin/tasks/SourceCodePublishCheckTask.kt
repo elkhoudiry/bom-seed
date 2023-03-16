@@ -29,10 +29,6 @@ abstract class SourceCodePublishCheckTask : DefaultTask() {
     fun execute(changes: InputChanges) {
         println("[LOG] project: ${project.name}, is incremental: ${changes.isIncremental}")
 
-        project.extra.set(SOURCE_CODE_CHANGED_KEY, true)
-    }
-
-    companion object {
-        const val SOURCE_CODE_CHANGED_KEY = "code-changed"
+        project.extra.set("code-changed", true)
     }
 }
