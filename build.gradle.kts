@@ -32,7 +32,7 @@ tasks.register("publishToGithub") {
     subprojects.find { it.name == "bom" }
         ?.let { bom ->
             bom.tasks["publishBomToGithubPackages"].dependsOn(childTasks)
-            dependsOn(bom.tasks["publishBomToGithubPackages"])
+            this.finalizedBy(bom.tasks["publishBomToGithubPackages"])
         }
 }
 
