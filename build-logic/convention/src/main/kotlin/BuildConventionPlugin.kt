@@ -46,7 +46,6 @@ fun Project.getLocalProperty(
     return when {
         localProperties.isFile -> {
             properties.load(localProperties.reader())
-            localProperties.reader().close()
             properties.getProperty(key)
         }
 
@@ -63,7 +62,6 @@ fun Project.getLocalPropertiesFromFile(name: String = "local"): Properties{
         val propertiesFile = File("$projectDir/$name.properties")
         if (propertiesFile.exists()){
             load(propertiesFile.reader())
-            propertiesFile.reader().close()
         }
     }
 
@@ -87,7 +85,6 @@ fun Project.setLocalProperty(
     properties[key] = value
 
     properties.store(propertiesFile.outputStream(), null)
-    propertiesFile.outputStream().close()
 }
 
 fun Project.getAllChildren(): List<Project> {

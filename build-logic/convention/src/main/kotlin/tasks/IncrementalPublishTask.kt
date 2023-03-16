@@ -59,12 +59,6 @@ internal fun Project.updatePublishProperties() {
     val root = project.rootProject
     val artifactId = project.getPublishArtifactId()
 
-    project.rootProject.setLocalProperty(
-        key = project.getPublishArtifactId(),
-        value = project.getLatestPublishedVersion(),
-        file = fileName
-    )
-
     val properties = project.rootProject.getLocalPropertiesFromFile(fileName)
     val moduleProperties = properties.filter {
         (it.key as String).startsWith(project.getPublishArtifactId())
@@ -76,7 +70,7 @@ internal fun Project.updatePublishProperties() {
         val version = if (i == 1) project.getLatestPublishedVersion() else
             moduleProperties["$artifactId.$previousRelease.version"] ?: "-"
         val time = if (i == 1) Clock.systemUTC()
-            .millis() else
+            .millis().toString() else
             moduleProperties["$artifactId.$previousRelease.time"] ?: "-"
 
         root.setLocalProperty(

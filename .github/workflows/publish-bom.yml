@@ -68,6 +68,10 @@ jobs:
           PUBLISH_REF: ${{ steps.prepare_version.outputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Update README
+        if: success()
+        run: ./gradlew updateREADME
+
       - name: Commit publish properties
         uses: EndBug/add-and-commit@v9
         if: success()

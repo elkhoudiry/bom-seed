@@ -51,28 +51,31 @@ tasks.register("updateREADME") {
         (it as String).split(".")
             .first()
     }
-    val dateFormatter = SimpleDateFormat("yyyy-MM-dd-k:m:s.S")
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+    val timeFormatter = SimpleDateFormat("k:m:s.S")
     var tableContent = ""
 
-    for (module in modules) {
+    for (module in modules.distinct().sorted()) {
         tableContent += "| $module |"
 
         for (releaseNumber in 1..5) {
             val release = "$module.v$releaseNumber"
             val version = properties["$release.version"] ?: "-"
-            val time = (properties["$release.time"] as String?)?.toLong() ?: Clock.systemUTC()
+            val time = (properties["$release.time"] as String?)?.toLongOrNull() ?: Clock.systemUTC()
                 .millis()
 
-            tableContent += " $version<br> ${dateFormatter.format(Date(time))} |"
+            tableContent += " $version<br> ${dateFormatter.format(Date(time))}<br> " +
+                    "${timeFormatter.format(Date(time))} |"
         }
         tableContent += "\n"
     }
 
     println("[LOG] table:\n$tableContent")
 
-    readmeFile.writeText(
-        readmeContent.replace(
-            Regex("#### Releases(.|\n)*##### End of releases"), """
+    readmeFile.outputStream()
+        .write(
+            readmeContent.replace(
+                Regex("#### Releases(.|\n)*##### End of releases"), """
 #### Releases
                 
 | Module | Latest | #2 | #3 | #4 | #5 |
@@ -81,8 +84,10 @@ $tableContent
                 
 ##### End of releases
             """.trimIndent()
+            )
+                .toByteArray()
         )
-    )
+
 
 }
 
