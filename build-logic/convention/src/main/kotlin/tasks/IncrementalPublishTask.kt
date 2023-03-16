@@ -23,13 +23,16 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
         dependsOn("${project.path}:build")
         doLast {
             project.setLocalProperty(
-                key = "version",
-                value = project.getNewPublishVersion(),
+                values = mapOf("version" to project.getNewPublishVersion()),
                 file = "publish"
             )
             updateBom()
-            println("[LOG] from: ${project.getPublishArtifactId()}, should bom: ${project
-                .rootProject.extra.get(SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY)}")
+            println(
+                "[LOG] from: ${project.getPublishArtifactId()}, should bom: ${
+                    project
+                        .rootProject.extra.get(SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY)
+                }"
+            )
 
             project.updatePublishProperties()
         }
@@ -45,8 +48,10 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
             .find { it.name == "bom" }
             ?.let {
                 it.setLocalProperty(
-                    key = project.getPublishArtifactId(),
-                    value = project.getLatestPublishedVersion(),
+                    values = mapOf(
+                        project.getPublishArtifactId() to project
+                            .getLatestPublishedVersion()
+                    ),
                     file = "metadata"
                 )
             }
@@ -66,25 +71,20 @@ internal fun Project.updatePublishProperties() {
     val moduleProperties = properties.filter {
         (it.key as String).startsWith(project.getPublishArtifactId())
     }
-
+    val values = mutableMapOf<String, String>()
     for (i in 1..5) {
         val release = "v$i"
         val previousRelease = "v${i - 1}"
         val version = if (i == 1) project.getLatestPublishedVersion() else
             moduleProperties["$artifactId.$previousRelease.version"] ?: "-"
         val time = if (i == 1) Clock.systemUTC()
-            .millis().toString() else
+            .millis()
+            .toString() else
             moduleProperties["$artifactId.$previousRelease.time"] ?: "-"
 
-        root.setLocalProperty(
-            key = "$artifactId.$release.time",
-            value = time,
-            file = fileName
-        )
-        root.setLocalProperty(
-            key = "$artifactId.$release.version",
-            value = version,
-            file = fileName
-        )
+        values["$artifactId.$release.time"] = time.toString()
+        values["$artifactId.$release.version"] = version.toString()
     }
+
+    root.setLocalProperty(values = values, file = fileName)
 }

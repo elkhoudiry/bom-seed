@@ -69,8 +69,7 @@ fun Project.getLocalPropertiesFromFile(name: String = "local"): Properties{
 }
 
 fun Project.setLocalProperty(
-    key: String,
-    value: Any,
+    values: Map<String, String>,
     file: String = ""
 ) {
     val properties = java.util.Properties()
@@ -82,7 +81,9 @@ fun Project.setLocalProperty(
     }
 
     properties.load(propertiesFile.reader())
-    properties[key] = value
+    values.forEach {
+        properties[it.key] = it.value
+    }
 
     properties.store(propertiesFile.outputStream(), null)
 }

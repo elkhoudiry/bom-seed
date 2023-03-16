@@ -23,8 +23,7 @@ abstract class BomPublishTask : PublishToMavenRepository() {
         }
         doLast {
             project.setLocalProperty(
-                key = "version",
-                value = project.getNewPublishVersion(),
+                values = mapOf("version" to project.getNewPublishVersion()),
                 file = "publish"
             )
             project.updatePublishProperties()
