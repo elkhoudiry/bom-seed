@@ -6,7 +6,8 @@ on:
   push:
     branches:
       - dev
-  workflow_dispatch:
+    tags:
+      - '*'
 
 jobs:
   publish:
@@ -38,7 +39,7 @@ jobs:
       - name: Prepare version
         id: prepare_version
         run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0 --always | grep -E '^[0-9]+.[0-9]+.[0-9]+$')
+          LATEST_TAG=$(git tag --sort "committerdate" | grep -E '[0-9]+.[0-9]+.[0-9]+' | tail -1)
           CURRENT_VERSION="${LATEST_TAG:-0.0.0}"
           IFS='.' read -ra VERSION_SPLIT <<< $CURRENT_VERSION          
           NEW_VERSION=${VERSION_SPLIT[0]}.${VERSION_SPLIT[1]}.$((${VERSION_SPLIT[2]} + 1))

@@ -1,5 +1,4 @@
 import tasks.SourceCodePublishCheckTask
-import java.util.*
 
 
 plugins {
@@ -35,13 +34,29 @@ tasks.register("publishToGithub") {
 }
 
 tasks.register("clearPublishCache") {
-    val commitMessage = System.getenv("LATEST_COMMIT_MESSAGE")
     val dir = File("${projectDir.path}/.gradle")
-    if (!commitMessage.contains("[clear publish cache]")) return@register
+    if (!shouldClearCache()) return@register
 
     dir.deleteRecursively()
 }
 
 subprojects {
     tasks.register<SourceCodePublishCheckTask>("sourceCodeCheck")
+}
+
+fun shouldClearCache(): Boolean {
+    val commitMessage = System.getenv("LATEST_COMMIT_MESSAGE")
+    val ref = System.getenv("GITHUB_REF")
+
+    if (commitMessage.contains("[clear publish cache]")) {
+        println("[LOG] clearing cache on commit trigger")
+        return true
+    }
+
+    if (ref.startsWith("refs/tags/")) {
+        println("[LOG] clearing cache on tag trigger")
+        return true
+    }
+
+    return false
 }
