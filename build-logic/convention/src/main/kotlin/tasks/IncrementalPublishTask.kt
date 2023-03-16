@@ -27,13 +27,6 @@ abstract class IncrementalPublishTask : PublishToMavenRepository() {
                 file = "publish"
             )
             updateBom()
-            println(
-                "[LOG] from: ${project.getPublishArtifactId()}, should bom: ${
-                    project
-                        .rootProject.extra.get(SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY)
-                }"
-            )
-
             project.updatePublishProperties()
         }
     }

@@ -1,10 +1,8 @@
 package tasks
 
-import getAllChildren
-import getLatestPublishedVersion
 import getNewPublishVersion
 import getPublishArtifactId
-import getPublishGroup
+import org.gradle.api.GradleException
 import org.gradle.api.publish.maven.tasks.PublishToMavenRepository
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.extra
@@ -13,14 +11,6 @@ import setLocalProperty
 abstract class BomPublishTask : PublishToMavenRepository() {
     init {
         println("[LOG] init BOM task")
-
-        onlyIf {
-            val check = project.rootProject.extra.properties.getOrDefault(
-                SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY, false
-            ) as Boolean
-            println("[LOG] BOM Check: $check")
-            check
-        }
         doLast {
             project.setLocalProperty(
                 values = mapOf("version" to project.getNewPublishVersion()),
@@ -32,6 +22,14 @@ abstract class BomPublishTask : PublishToMavenRepository() {
 
     @TaskAction
     fun perform() {
+        val check = project.rootProject.extra.properties.getOrDefault(
+            SourceCodePublishCheckTask.SOURCE_CODE_CHANGED_KEY, false
+        ) as Boolean
+
+        if (!check) {
+            throw GradleException("Nothing to publish")
+        }
+
         println("[LOG] publishing bom: ${project.getPublishArtifactId()}")
     }
 }
