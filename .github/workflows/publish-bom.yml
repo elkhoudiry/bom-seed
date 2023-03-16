@@ -76,7 +76,6 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: success()
         with:
-          add: '**/publish.properties **/metadata.properties'
           message: 'committing publish properties: ${{ steps.prepare_version.outputs.version }}'
 
       - name: Push new tag
